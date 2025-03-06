@@ -4,7 +4,7 @@ import time
 
 # Set up the OpenRouter API key (replace with your actual key)
 API_KEY = "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"
-API_URL = "https://openrouter.ai/api/v1"
+API_URL = "https://api.openrouter.ai/v1/chat/completions"  # Ensure this is the correct API endpoint
 
 # Variables
 decision_count = 0
@@ -13,16 +13,32 @@ messages = []
 
 # Function to interact with the AI
 def ask_ai(messages, max_retries=3):
-    headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
-    data = {"model": "openai/gpt-3.5-turbo", "messages": messages, "max_tokens": 500, "temperature": 0.8}
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": "openai/gpt-3.5-turbo",  # Make sure the correct model is set
+        "messages": messages,             # This is where the conversation history is stored
+        "max_tokens": 500,
+        "temperature": 0.8
+    }
 
+    # Retry mechanism in case of network errors
     for attempt in range(max_retries):
         try:
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
+            response.raise_for_status()  # Raises HTTPError for bad responses
             response_json = response.json()
+
+            # Ensure the response contains valid choices
             if "choices" in response_json and response_json["choices"]:
                 return response_json["choices"][0]["message"]["content"]
-        except requests.exceptions.RequestException:
+            else:
+                return "⚠️ No valid response from AI. Please try again later."
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error: {e}")
             time.sleep(2)  # Wait before retrying
     return "⚠️ Failed to get a response from the AI. Please try again later."
 
@@ -44,7 +60,7 @@ def continue_story(decision):
 # Streamlit UI
 def main():
     global decision_count, messages
-   
+
     st.title('FBLA Marvin TGV 2025 - Interactive Story')
 
     # Use st.empty() for a scrollable container to dynamically update text
