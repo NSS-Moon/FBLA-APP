@@ -45,39 +45,48 @@ def continue_story(decision):
 def main():
     global decision_count, messages
     
-    # Set retro purple theme using custom CSS
+    # Set retro purple theme and the "Press Start 2P" font using custom CSS
     st.markdown(
         """
         <style>
+            /* Inject custom styles for a retro look */
+            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
             body {
-                background-color: #2E004F;
+                background-color: #6A0DAD;  /* Purple background */
                 color: #F1E6FA;
-                font-family: 'Courier New', Courier, monospace;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 20px;  /* Increase font size for better readability */
             }
+
             .stTextInput, .stButton, .stTextArea {
                 background-color: #4A0072;
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
-                font-family: 'Courier New', Courier, monospace;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 20px;
             }
-            .stTextInput input {
-                color: #F1E6FA;
-            }
+
             .stButton>button {
-                background-color: #6A0DAD;
+                background-color: #9B30FF;
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
-                font-family: 'Courier New', Courier, monospace;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 20px;
             }
+
             .stButton>button:hover {
-                background-color: #9B30FF;
+                background-color: #6A0DAD;
             }
+
             .stTextArea>textarea {
                 background-color: #4A0072;
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
-                font-family: 'Courier New', Courier, monospace;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 20px;
             }
+
             .stTitle {
                 color: #F1E6FA;
             }
