@@ -2,9 +2,9 @@ import streamlit as st
 import requests
 import time
 
-# Set up the AI21 Labs API key (replace with your actual key)
-API_KEY = "c999c2e8-cd38-478f-bc3c-de26d1018610"  # Replace with your API key from AI21 Labs
-API_URL = "https://api.ai21.com/studio/v1/j1-jumbo/complete"  # Correct Jurassic-1 Jumbo Model endpoint
+# Set up the OpenRouter API key (replace with your actual key)
+API_KEY = "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"
+API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Variables
 decision_count = 0
@@ -12,32 +12,18 @@ max_decisions = 10
 messages = []
 
 
-# Function to interact with the AI21 Labs API (Jurassic-1)
+# Function to interact with the AI
 def ask_ai(messages, max_retries=3):
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    prompt = " ".join([msg["content"] for msg in messages])  # Combine the messages for prompt
-
-    data = {
-        "prompt": prompt,
-        "maxTokens": 500,  # You can adjust this value to control response length
-        "temperature": 0.8,  # Controls the randomness of the response
-        "topP": 1,  # Controls diversity via nucleus sampling
-        "stopSequences": ["\n"]  # Optionally, specify stop sequences
-    }
+    headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+    data = {"model": "openai/gpt-3.5-turbo", "messages": messages, "max_tokens": 500, "temperature": 0.8}
 
     for attempt in range(max_retries):
         try:
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
-            response.raise_for_status()  # Raise an error for HTTP codes 4xx or 5xx
             response_json = response.json()
-            if "completion" in response_json:
-                return response_json["completion"]
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error connecting to the AI21 API: {e}")
+            if "choices" in response_json and response_json["choices"]:
+                return response_json["choices"][0]["message"]["content"]
+        except requests.exceptions.RequestException:
             time.sleep(2)  # Wait before retrying
     return "⚠️ Failed to get a response from the AI. Please try again later."
 
