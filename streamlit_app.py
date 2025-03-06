@@ -2,9 +2,9 @@ import streamlit as st
 import requests
 import time
 
-# Set up the OpenRouter API key (replace with your actual key)
-API_KEY = "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"
-API_URL = "https://api.openrouter.ai/v1"  # Ensure this is the correct API endpoint
+# Set up the Hugging Face API key
+API_KEY = "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"
+API_URL = "https://api-interference.huggingface.co/models/smolLM2-1.7B-instruct"  # Ensure this is the correct API endpoint
 
 # Variables
 decision_count = 0
