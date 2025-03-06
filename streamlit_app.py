@@ -3,7 +3,7 @@ import requests
 import time
 
 # Set up the OpenRouter API key (replace with your actual key)
-API_KEY = "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"
+API_KEY = "ssk-or-v1-424a4182f05d71fe6cc0298a95dae27dbe72919a778021afa539c31e01845cda"
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Variables
