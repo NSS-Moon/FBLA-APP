@@ -2,9 +2,9 @@ import streamlit as st
 import requests
 import time
 
-# Set up the Hugging Face API key
-API_KEY = "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"
-API_URL = "https://api-interference.huggingface.co/models/distillgpt2"  # Ensure this is the correct API endpoint
+# Set up the Hugging Face API key (replace with your actual key)
+API_KEY = "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"  # Replace with your Hugging Face API key
+API_URL = "https://api-inference.huggingface.co/models/gpt2"  # Example GPT-2 model from Hugging Face, you can change this
 
 # Variables
 decision_count = 0
@@ -17,12 +17,11 @@ def ask_ai(messages, max_retries=3):
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
-    
+
     data = {
-        "model": "openai/gpt-3.5-turbo",  # Make sure the correct model is set
-        "messages": messages,             # This is where the conversation history is stored
-        "max_tokens": 500,
-        "temperature": 0.8
+        "inputs": {
+            "text": " ".join([message['content'] for message in messages if message['role'] == "user"])
+        }
     }
 
     # Retry mechanism in case of network errors
@@ -32,9 +31,9 @@ def ask_ai(messages, max_retries=3):
             response.raise_for_status()  # Raises HTTPError for bad responses
             response_json = response.json()
 
-            # Ensure the response contains valid choices
-            if "choices" in response_json and response_json["choices"]:
-                return response_json["choices"][0]["message"]["content"]
+            # Ensure the response contains valid output
+            if "generated_text" in response_json:
+                return response_json["generated_text"]
             else:
                 return "⚠️ No valid response from AI. Please try again later."
         except requests.exceptions.RequestException as e:
