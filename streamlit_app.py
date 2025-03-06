@@ -32,10 +32,12 @@ def ask_ai(messages, max_retries=3):
     for attempt in range(max_retries):
         try:
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
+            response.raise_for_status()  # Raise an error for HTTP codes 4xx or 5xx
             response_json = response.json()
             if "completion" in response_json:
                 return response_json["completion"]
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error connecting to the AI21 API: {e}")
             time.sleep(2)  # Wait before retrying
     return "⚠️ Failed to get a response from the AI. Please try again later."
 
