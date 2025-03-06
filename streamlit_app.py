@@ -11,7 +11,6 @@ decision_count = 0
 max_decisions = 10
 messages = []
 
-
 # Function to interact with the AI
 def ask_ai(messages, max_retries=3):
     headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
@@ -48,6 +47,9 @@ def main():
     
     st.title('FBLA Marvin TGV 2025 - Interactive Story')
 
+    # Use st.empty() for a scrollable container to dynamically update text
+    story_container = st.empty()
+
     # Genre input to start the story
     genre = st.text_input("Enter a genre for your story:")
     
@@ -57,7 +59,8 @@ def main():
         messages = [{"role": "system", "content": "You are an interactive storyteller."}]
         story = start_story(genre)
         messages.append({"role": "assistant", "content": story})
-        st.write(story)
+        # Display the story in the container
+        story_container.write(story)
 
     # If the user wants to continue the story
     if decision_count < max_decisions:
@@ -68,7 +71,8 @@ def main():
                 decision_count += 1
                 next_part = continue_story(decision)
                 messages.append({"role": "assistant", "content": next_part})
-                st.write(next_part)
+                # Update the story by appending the new part
+                story_container.write("\n" + next_part)
             else:
                 st.error("Please enter a decision!")
     
