@@ -4,7 +4,7 @@ import time
 
 # Set up the Hugging Face API key
 API_KEY = "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"
-API_URL = "https://api-interference.huggingface.co/models/SmolLM2"  # Ensure this is the correct API endpoint
+API_URL = "https://api-interference.huggingface.co/models/distillgpt2"  # Ensure this is the correct API endpoint
 
 # Variables
 decision_count = 0
