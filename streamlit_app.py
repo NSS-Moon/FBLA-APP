@@ -4,7 +4,7 @@ import time
 
 # Set up the AI21 Labs API key (replace with your actual key)
 API_KEY = "c999c2e8-cd38-478f-bc3c-de26d1018610"  # Replace with your API key from AI21 Labs
-API_URL = "https://api.ai21.com/studio/v1/j1-large/complete"  # Jurassic-1 Large Model endpoint
+API_URL = "https://api.ai21.com/studio/v1/j1-jumbo/complete"  # Correct Jurassic-1 Jumbo Model endpoint
 
 # Variables
 decision_count = 0
