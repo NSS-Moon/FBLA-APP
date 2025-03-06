@@ -4,7 +4,7 @@ import time
 
 # Set up the Hugging Face API key (replace with your actual key)
 API_KEY = "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"  # Replace with your Hugging Face API key
-API_URL = "https://api-inference.huggingface.co/models/gpt2"  # Example GPT-2 model from Hugging Face, you can change this
+API_URL = "https://huggingface.co/deepseek-ai/DeepSeek-R1"  # Example GPT-2 model from Hugging Face, you can change this
 
 # Variables
 decision_count = 0
