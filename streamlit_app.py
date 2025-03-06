@@ -45,6 +45,46 @@ def continue_story(decision):
 def main():
     global decision_count, messages
     
+    # Set retro purple theme using custom CSS
+    st.markdown(
+        """
+        <style>
+            body {
+                background-color: #2E004F;
+                color: #F1E6FA;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .stTextInput, .stButton, .stTextArea {
+                background-color: #4A0072;
+                color: #F1E6FA;
+                border: 2px solid #F1E6FA;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .stTextInput input {
+                color: #F1E6FA;
+            }
+            .stButton>button {
+                background-color: #6A0DAD;
+                color: #F1E6FA;
+                border: 2px solid #F1E6FA;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .stButton>button:hover {
+                background-color: #9B30FF;
+            }
+            .stTextArea>textarea {
+                background-color: #4A0072;
+                color: #F1E6FA;
+                border: 2px solid #F1E6FA;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .stTitle {
+                color: #F1E6FA;
+            }
+        </style>
+        """, unsafe_allow_html=True
+    )
+
     st.title('FBLA Marvin TGV 2025 - Interactive Story')
 
     # Use st.empty() for a scrollable container to dynamically update text
