@@ -2,9 +2,9 @@ import streamlit as st
 import requests
 import time
 
-# Set up the OpenRouter API key (replace with your actual key)
-API_KEY = "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"
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+# Set up the AI21 Labs API key (replace with your actual key)
+API_KEY = "c999c2e8-cd38-478f-bc3c-de26d1018610"  # Replace with your API key from AI21 Labs
+API_URL = "https://api.ai21.com/studio/v1/j1-large/complete"  # Jurassic-1 Large Model endpoint
 
 # Variables
 decision_count = 0
@@ -12,17 +12,29 @@ max_decisions = 10
 messages = []
 
 
-# Function to interact with the AI
+# Function to interact with the AI21 Labs API (Jurassic-1)
 def ask_ai(messages, max_retries=3):
-    headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
-    data = {"model": "openai/gpt-3.5-turbo", "messages": messages, "max_tokens": 500, "temperature": 0.8}
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    prompt = " ".join([msg["content"] for msg in messages])  # Combine the messages for prompt
+
+    data = {
+        "prompt": prompt,
+        "maxTokens": 500,  # You can adjust this value to control response length
+        "temperature": 0.8,  # Controls the randomness of the response
+        "topP": 1,  # Controls diversity via nucleus sampling
+        "stopSequences": ["\n"]  # Optionally, specify stop sequences
+    }
 
     for attempt in range(max_retries):
         try:
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
             response_json = response.json()
-            if "choices" in response_json and response_json["choices"]:
-                return response_json["choices"][0]["message"]["content"]
+            if "completion" in response_json:
+                return response_json["completion"]
         except requests.exceptions.RequestException:
             time.sleep(2)  # Wait before retrying
     return "⚠️ Failed to get a response from the AI. Please try again later."
