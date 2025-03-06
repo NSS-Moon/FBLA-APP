@@ -44,19 +44,19 @@ def continue_story(decision):
 # Streamlit UI
 def main():
     global decision_count, messages
-    
-    # Set retro purple theme and the "Press Start 2P" font using custom CSS
+
+    # Inject custom styles to make the text retro themed and set the background color to purple
     st.markdown(
         """
         <style>
-            /* Inject custom styles for a retro look */
+            /* Retro font and background */
             @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
             body {
                 background-color: #6A0DAD;  /* Purple background */
-                color: #F1E6FA;
+                color: white;
                 font-family: 'Press Start 2P', cursive;
-                font-size: 20px;  /* Increase font size for better readability */
+                font-size: 18px;
             }
 
             .stTextInput, .stButton, .stTextArea {
@@ -64,7 +64,7 @@ def main():
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
                 font-family: 'Press Start 2P', cursive;
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .stButton>button {
@@ -72,7 +72,7 @@ def main():
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
                 font-family: 'Press Start 2P', cursive;
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .stButton>button:hover {
@@ -84,7 +84,7 @@ def main():
                 color: #F1E6FA;
                 border: 2px solid #F1E6FA;
                 font-family: 'Press Start 2P', cursive;
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .stTitle {
@@ -101,7 +101,7 @@ def main():
 
     # Genre input to start the story
     genre = st.text_input("Enter a genre for your story:")
-    
+   
     # If the user has inputted a genre, start the story
     if genre and decision_count == 0:
         decision_count = 0  # Reset decision count
@@ -124,7 +124,7 @@ def main():
                 story_container.write("\n" + next_part)
             else:
                 st.error("Please enter a decision!")
-    
+   
     # End story if 10 decisions have been made
     if decision_count >= max_decisions:
         st.write('The story has ended after 10 decisions.')
