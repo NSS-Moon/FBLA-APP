@@ -4,12 +4,7 @@ import json
 import time
 
 API_KEY = "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"  # Replace with your actual OpenRouter API Key
-BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
-
-headers = {
-    "Authorization": f"Bearer {API_KEY}",  # Ensure this is correct
-    "Content-Type": "application/json",
-}
+BASE_URL = f"https://openrouter.ai/api/v1/chat/completions?api_key={API_KEY}"
 
 # Variables
 decision_count = 0
@@ -24,8 +19,8 @@ def ask_ai(messages, max_retries=3):
                 "messages": messages  # Send the conversation history
             }
 
-            # Send the POST request to OpenRouter API
-            response = requests.post(BASE_URL, headers=headers, json=payload, timeout=10)
+            # Send the POST request to OpenRouter API (without the authorization header)
+            response = requests.post(BASE_URL, json=payload, timeout=10)
 
             # Print the raw response text for debugging
             print("Raw Response:", response.text)
