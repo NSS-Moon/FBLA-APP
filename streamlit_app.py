@@ -4,7 +4,7 @@ import time
 import json
 
 # Set up the API key securely (store it in Streamlit's secrets or environment variables)
-API_KEY = "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"  # This assumes you've added it to the Streamlit secrets.toml
+API_KEY = "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"  # Assuming you've added it to secrets.toml
 API_URL = "https://openrouter.ai/v1/gpt4"  # Ensure this URL is correct
 
 # Variables
@@ -46,7 +46,8 @@ def ask_ai(messages, max_retries=3):
                 else:
                     return "⚠️ No valid response from AI. Please try again later."
             except json.JSONDecodeError:
-                return "⚠️ Response is not valid JSON. Please check the server logs or contact support."
+                # If response is not JSON, log the raw response for further analysis
+                return f"⚠️ Response is not valid JSON. Raw response: {response.text}"
                 
         except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
