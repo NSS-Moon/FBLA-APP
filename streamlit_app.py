@@ -4,7 +4,7 @@ import time
 
 # Set up the API key 
 API_KEY = "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"  # OpenRouter API key
-API_URL = "https://openrouter.ai/chat"  
+API_URL = "https://openrouter.ai/v1/gpt4"  
 
 # Variables
 decision_count = 0
