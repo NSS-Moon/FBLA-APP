@@ -20,7 +20,7 @@ def ask_ai(messages, max_retries=3):
     for attempt in range(max_retries):
         try:
             payload = {
-                "model": "openai/gpt-4o",  # Use the GPT-4o model
+                "model": "openai/gpt-4o-latest",  # Use the GPT-4o model
                 "messages": messages  # Send the conversation history
             }
 
