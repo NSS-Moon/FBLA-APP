@@ -4,7 +4,7 @@ import time
 import json
 
 # Set up the API key securely (store it in Streamlit's secrets or environment variables)
-API_KEY = st.secrets["api_key"]  # This assumes you've added it to the Streamlit secrets.toml
+API_KEY = "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"  # This assumes you've added it to the Streamlit secrets.toml
 API_URL = "https://openrouter.ai/v1/gpt4"  # Ensure this URL is correct
 
 # Variables
