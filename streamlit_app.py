@@ -2,9 +2,9 @@ import streamlit as st
 import requests
 import time
 
-# Set up the Hugging Face API key (replace with your actual key)
-API_KEY = "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"  # Replace with your Hugging Face API key
-API_URL = "https://huggingface.co/deepseek-ai/DeepSeek-R1"  # Example GPT-2 model from Hugging Face, you can change this
+# Set up the API key 
+API_KEY = "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"  # OpenRouter API key
+API_URL = "https://openrouter.ai/api/v1/chat/completions"  
 
 # Variables
 decision_count = 0
