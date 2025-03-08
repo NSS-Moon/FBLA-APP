@@ -4,7 +4,7 @@ import json
 import time
 
 API_KEY = "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"  # Replace with your OpenRouter API Key
-BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
+BASE_URL = "https://openrouter.ai/api/v1"
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
