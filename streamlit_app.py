@@ -15,7 +15,6 @@ headers = {
 decision_count = 0
 max_decisions = 10
 messages = []
-
 def ask_ai(messages, max_retries=3):
     for attempt in range(max_retries):
         try:
@@ -27,10 +26,22 @@ def ask_ai(messages, max_retries=3):
             # Send the POST request to OpenRouter API
             response = requests.post(BASE_URL, headers=headers, json=payload, timeout=10)
 
+            # Print the raw response text for debugging
+            print("Raw Response:", response.text)
+
             # Check if the response is successful
             if response.status_code == 200:
-                response_json = response.json()
-                return response_json["choices"][0]["message"]["content"]
+                if response.text.strip():  # Ensure response is not empty
+                    try:
+                        response_json = response.json()
+                        print("Parsed Response JSON:", response_json)
+                        return response_json["choices"][0]["message"]["content"]
+                    except json.JSONDecodeError:
+                        st.error("Error: Response is not valid JSON")
+                        return "⚠️ Failed to get a valid response."
+                else:
+                    st.error("Error: Empty response received.")
+                    return "⚠️ Failed to get a valid response."
             else:
                 st.error(f"Error: {response.status_code}, {response.text}")
                 return "⚠️ Failed to get a response. Please try again later."
