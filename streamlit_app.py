@@ -5,7 +5,7 @@ import time
 
 # Set up the API key 
 API_KEY = "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"  # Replace with your OpenRouter API Key
-API_URL = "https://openrouter.ai/api/v1"
+API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Variables
 decision_count = 0
@@ -30,8 +30,19 @@ def ask_ai(messages, max_retries=3):
         try:
             # Make a POST request to the OpenRouter API
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
+
+            # Log the raw response and status code for debugging
+            print("Status Code:", response.status_code)  # Log status code
+            print("Response Text:", response.text)  # Log raw response
+
             response.raise_for_status()  # Raises HTTPError for bad responses
-            response_json = response.json()
+
+            # Try to parse JSON response
+            try:
+                response_json = response.json()
+            except json.JSONDecodeError:
+                st.error("⚠️ Invalid JSON response received from the server.")
+                return "⚠️ Invalid JSON response received from the server."
 
             # Ensure the response contains valid output
             if "choices" in response_json:
@@ -41,6 +52,7 @@ def ask_ai(messages, max_retries=3):
         except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
             time.sleep(2)  # Wait before retrying
+
     return "⚠️ Failed to get a response from the AI. Please try again later."
 
 
