@@ -19,9 +19,11 @@ def ask_ai(messages, max_retries=3):
         "Content-Type": "application/json"
     }
 
-    # Create the payload (you may need to adjust the format to fit OpenRouter's API)
+    # Ensure the structure matches OpenRouter API expectations
+    # The "messages" key should likely have a list of messages or prompts, as expected by OpenRouter
     data = {
-        "messages": messages
+        "model": "gpt-4",  # Specify the model (this might be needed based on the API)
+        "messages": messages  # Ensure messages is structured properly
     }
 
     # Retry mechanism in case of network errors
