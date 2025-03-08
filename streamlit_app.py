@@ -5,7 +5,8 @@ import time
 
 # Set up the API key 
 API_KEY = "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"  # Replace with your OpenRouter API Key
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+BASE_URL = "https://openrouter.ai/api/v1"
+ENDPOINT = f"{BASE_URL}/chat/completions"
 
 # Variables
 decision_count = 0
@@ -21,7 +22,7 @@ def ask_ai(messages, max_retries=3):
 
     # Build the request payload
     data = {
-        "model": "openai/gpt-4o",  # Optional, specify the model to use
+        "model": "openai/gpt-4",  # Specify the model to use (e.g., GPT-4)
         "messages": messages  # The conversation so far (user and assistant messages)
     }
 
@@ -29,20 +30,9 @@ def ask_ai(messages, max_retries=3):
     for attempt in range(max_retries):
         try:
             # Make a POST request to the OpenRouter API
-            response = requests.post(API_URL, headers=headers, json=data, timeout=10)
-
-            # Log the raw response and status code for debugging
-            print("Status Code:", response.status_code)  # Log status code
-            print("Response Text:", response.text)  # Log raw response
-
+            response = requests.post(ENDPOINT, headers=headers, json=data, timeout=10)
             response.raise_for_status()  # Raises HTTPError for bad responses
-
-            # Try to parse JSON response
-            try:
-                response_json = response.json()
-            except json.JSONDecodeError:
-                st.error("⚠️ Invalid JSON response received from the server.")
-                return "⚠️ Invalid JSON response received from the server."
+            response_json = response.json()
 
             # Ensure the response contains valid output
             if "choices" in response_json:
@@ -52,9 +42,7 @@ def ask_ai(messages, max_retries=3):
         except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
             time.sleep(2)  # Wait before retrying
-
     return "⚠️ Failed to get a response from the AI. Please try again later."
-
 
 # Start Story
 def start_story(genre):
@@ -79,7 +67,7 @@ def main():
 
     # Genre input to start the story
     genre = st.text_input("Enter a genre for your story:")
-   
+
     # If the user has inputted a genre, start the story
     if genre and decision_count == 0:
         decision_count = 0  # Reset decision count
