@@ -1,56 +1,43 @@
 import streamlit as st
 import requests
-import time
 import json
+import time
 
-# Set up the API key securely (store it in Streamlit's secrets or environment variables)
-API_KEY = "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"  # Assuming you've added it to secrets.toml
-API_URL = "https://openrouter.ai/v1/gpt4"  # Ensure this URL is correct
+# Set up the API key 
+API_KEY = "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"  # Replace with your OpenRouter API Key
+API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Variables
-MAX_DECISIONS = 10
 decision_count = 0
+max_decisions = 10
 messages = []
 
-# Function to interact with the AI
+# Function to interact with the AI using OpenRouter API
 def ask_ai(messages, max_retries=3):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
 
-    # Ensure the structure matches OpenRouter API expectations
-    # The "messages" key should likely have a list of messages or prompts, as expected by OpenRouter
+    # Build the request payload
     data = {
-        "model": "gpt-4",  # Specify the model (this might be needed based on the API)
-        "messages": messages  # Ensure messages is structured properly
+        "model": "openai/gpt-4o",  # Optional, specify the model to use
+        "messages": messages  # The conversation so far (user and assistant messages)
     }
 
     # Retry mechanism in case of network errors
     for attempt in range(max_retries):
         try:
-            # Send the POST request to the API
+            # Make a POST request to the OpenRouter API
             response = requests.post(API_URL, headers=headers, json=data, timeout=10)
-            
-            # Log the response status code and content for debugging
-            st.write(f"Response Status Code: {response.status_code}")
-            st.write(f"Response Content: {response.text}")  # Log the raw response content
+            response.raise_for_status()  # Raises HTTPError for bad responses
+            response_json = response.json()
 
-            # Check if the response is valid
-            response.raise_for_status()  # This will raise an error for HTTP errors (non-2xx status codes)
-
-            # Try to parse the response as JSON
-            try:
-                response_json = response.json()
-                # Ensure the response contains valid output
-                if "generated_text" in response_json:
-                    return response_json["generated_text"]
-                else:
-                    return "⚠️ No valid response from AI. Please try again later."
-            except json.JSONDecodeError:
-                # If response is not JSON, log the raw response for further analysis
-                return f"⚠️ Response is not valid JSON. Raw response: {response.text}"
-                
+            # Ensure the response contains valid output
+            if "choices" in response_json:
+                return response_json["choices"][0]["message"]["content"]
+            else:
+                return "⚠️ No valid response from AI. Please try again later."
         except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
             time.sleep(2)  # Wait before retrying
@@ -63,13 +50,11 @@ def start_story(genre):
     return ask_ai([{"role": "system", "content": "You are an interactive storyteller."},
                    {"role": "user", "content": prompt}])
 
-
 # Continue Story
 def continue_story(decision):
     global messages
     messages.append({"role": "user", "content": decision})
     return ask_ai(messages)
-
 
 # Streamlit UI
 def main():
@@ -82,7 +67,7 @@ def main():
 
     # Genre input to start the story
     genre = st.text_input("Enter a genre for your story:")
-
+   
     # If the user has inputted a genre, start the story
     if genre and decision_count == 0:
         decision_count = 0  # Reset decision count
@@ -93,7 +78,7 @@ def main():
         story_container.write(story)
 
     # If the user wants to continue the story
-    if decision_count < MAX_DECISIONS:
+    if decision_count < max_decisions:
         decision = st.text_input("Enter your action/decision to continue the story:")
 
         if st.button('Continue'):
@@ -105,9 +90,9 @@ def main():
                 story_container.write("\n" + next_part)
             else:
                 st.error("Please enter a decision!")
-
+   
     # End story if 10 decisions have been made
-    if decision_count >= MAX_DECISIONS:
+    if decision_count >= max_decisions:
         st.write('The story has ended after 10 decisions.')
         if st.button("Reset Game"):
             decision_count = 0
