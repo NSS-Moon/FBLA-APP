@@ -4,7 +4,7 @@ import json
 import time
 
 API_KEY = "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"  # Replace with your OpenRouter API Key
-BASE_URL = "https://openrouter.ai/api/v1"
+BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -15,6 +15,7 @@ headers = {
 decision_count = 0
 max_decisions = 10
 messages = []
+
 def ask_ai(messages, max_retries=3):
     for attempt in range(max_retries):
         try:
@@ -33,22 +34,24 @@ def ask_ai(messages, max_retries=3):
             if response.status_code == 200:
                 if response.text.strip():  # Ensure response is not empty
                     try:
-                        response_json = response.json()
+                        response_json = response.json()  # Try to parse the JSON response
                         print("Parsed Response JSON:", response_json)
                         return response_json["choices"][0]["message"]["content"]
                     except json.JSONDecodeError:
-                        st.error("Error: Response is not valid JSON")
+                        st.error("Error: Response is not valid JSON.")
                         return "⚠️ Failed to get a valid response."
                 else:
                     st.error("Error: Empty response received.")
                     return "⚠️ Failed to get a valid response."
             else:
                 st.error(f"Error: {response.status_code}, {response.text}")
-                return "⚠️ Failed to get a response. Please try again later."
+                return f"⚠️ Failed to get a response. Server returned status code: {response.status_code}"
+
         except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
             time.sleep(2)  # Wait before retrying
-    return "⚠️ Failed to get a response. Please try again later."
+            
+    return "⚠️ Failed to get a response after multiple attempts."
 
 def start_story(genre):
     prompt = f"Create a detailed and engaging interactive story in the {genre} genre. The story should start with an immersive opening scene. The AI should continue the story based on whatever action the user provides, without suggesting options."
